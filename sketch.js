@@ -1,18 +1,26 @@
 let noiseScale = 0.008;
+let overlayNoiseScale = 0.002;
+
 let points = [];
-let defaultAmplitude = 100;
+let defaultAmplitude = 100;//140;
 let soundAmplitude = defaultAmplitude;
 let spaceBetween = 25;
 
+//let spaceBetween = 20;
+
 let noiseOffset = 0;
+let overlayNoiseOffset = 0;
 
 function setup() {
-  createCanvas(1910, 945);//createCanvas(1650, 1275);
+  createCanvas(windowWidth - 10, windowHeight - 20); //1910, 945);
+
+  //scale the space between based on the size of the display, with a minimum of 25
+  spaceBetween = max(25, round((windowWidth / 1910) * 25));
 
   for(let a = 0; a <= height; a += spaceBetween)
   {
     points[a / spaceBetween] = [];
-    for(let i = 0; i < width; i += spaceBetween)
+    for(let i = 0; i < width + spaceBetween; i += spaceBetween)
     {
       points[a / spaceBetween][i / spaceBetween] = new noisePoint(i, a);
     }
@@ -45,17 +53,18 @@ function draw() {
     }
   }
   noiseOffset += 1;
+  overlayNoiseOffset -= 1;
 }
 
 class noisePoint 
 {
   constructor(x, y)
   {
-    this.x = x;
+    this.x = x - spaceBetween; //offset first set of points to remove static artifact
     this.y = y;
     this.originalY = y;
 
-    this.noise = noise(x * noiseScale, y * noiseScale); 
+    this.noise = noise(x * noiseScale, y * noiseScale) * noise(x * overlayNoiseScale, y * overlayNoiseScale); 
     
     this.col = 0;
     //this.y += (this.noise * soundAmplitude);
@@ -64,7 +73,7 @@ class noisePoint
 
   update()
   {
-    this.noise = noise((this.x + noiseOffset) * noiseScale, (this.y + noiseOffset) * noiseScale); 
+    this.noise = noise((this.x + noiseOffset) * noiseScale, (this.y + noiseOffset) * noiseScale);// * noise((this.x + overlayNoiseOffset) * overlayNoiseScale, (this.y + overlayNoiseOffset) * overlayNoiseScale);
     this.y = this.originalY + ((this.noise - 0.5) * soundAmplitude);
     this.col = 255 - (this.noise * 255);
   }
