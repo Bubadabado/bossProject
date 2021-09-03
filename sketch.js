@@ -4,8 +4,6 @@ let defaultAmplitude = 100;
 let soundAmplitude = defaultAmplitude;
 let spaceBetween = 25;
 
-//let spaceBetween = 20;
-
 let noiseOffset = 0;
 
 function setup() {
@@ -24,15 +22,15 @@ function setup() {
   rectMode(CENTER);
 
   //audio visualization
-  mic = new p5.AudioIn();
-  mic.start();
+  //mic = new p5.AudioIn();
+  //mic.start();
 }
 
 function draw() {
   background(255);
 
-  let vol = mic.getLevel();
-  soundAmplitude = defaultAmplitude + (200 * vol);
+  //let vol = mic.getLevel();
+  //soundAmplitude = defaultAmplitude + (200 * vol);
 
   for(let i = 1; i < points.length; i++)
   {
